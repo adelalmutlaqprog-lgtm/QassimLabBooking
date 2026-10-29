@@ -11,7 +11,7 @@ builder.Services.AddControllersWithViews()
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
     });
 
-// 1. ربط قاعدة البيانات بـ PostgreSQL (Supabase) بدلاً من SQLite
+// 1. ربط قاعدة البيانات بـ PostgreSQL (Supabase)
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -28,37 +28,44 @@ var app = builder.Build();
 // إظهار صفحة تفاصيل الخطأ بوضوح لتشخيص المشكلة فوراً
 app.UseDeveloperExceptionPage();
 
-// 2. إنشاء قاعدة البيانات وزرع البيانات الأولية تلقائياً على السحاب
+// 2. تطبيق الـ Migrations تلقائياً وزرع البيانات الأولية بأمان على السحاب
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<AppDbContext>();
-
-    // تطبيق الـ Migrations وضمان إنشائها على السحاب
-    context.Database.EnsureCreated();
-
-    if (!context.Labs.Any())
+    try
     {
-        var lab1 = new Lab { Name = "3047" };
-        context.Labs.Add(lab1);
-        context.SaveChanges();
+        var context = services.GetRequiredService<AppDbContext>();
 
-        context.Devices.AddRange(
-            new Device { Name = "UV-Vis for liquid (1800)", LabId = lab1.Id },
-            new Device { Name = "UV-Vis for liquid (1650)", LabId = lab1.Id },
-            new Device { Name = "Photoreactor", LabId = lab1.Id },
-            new Device { Name = "UV-Vis for solid", LabId = lab1.Id },
-            new Device { Name = "IR Spectroscopy", LabId = lab1.Id }
-        );
-        context.SaveChanges();
+        // تطبيق المايجريشن على قاعدة بيانات Supabase
+        context.Database.Migrate();
+
+        // زرع البيانات الأولية للمختبرات والأجهزة إذا كانت فارغة
+        if (!context.Labs.Any())
+        {
+            var lab1 = new Lab { Name = "3047" };
+            context.Labs.Add(lab1);
+            context.SaveChanges();
+
+            context.Devices.AddRange(
+                new Device { Name = "UV-Vis for liquid (1800)", LabId = lab1.Id },
+                new Device { Name = "UV-Vis for liquid (1650)", LabId = lab1.Id },
+                new Device { Name = "Photoreactor", LabId = lab1.Id },
+                new Device { Name = "UV-Vis for solid", LabId = lab1.Id },
+                new Device { Name = "IR Spectroscopy", LabId = lab1.Id }
+            );
+            context.SaveChanges();
+        }
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while migrating or seeding the database.");
     }
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseSession();
 app.UseAuthorization();
 
