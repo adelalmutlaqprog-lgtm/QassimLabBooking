@@ -1,0 +1,53 @@
+﻿@model IEnumerable<QassimLabBooking.Models.Reservation>
+
+@{
+    ViewData["Title"] = "عرض الحجوزات";
+}
+
+<div class="container mt-4">
+    <div class="text-center mb-4">
+        <h2 class="fw-bold" style="color: #004d26;">جدول الحجوزات والأجهزة</h2>
+        <p class="text-muted">استعرض المواعيد المحجوزة مسبقاً لتجنب تعارض الأوقات</p>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead style="background-color: #004d26; color: white;">
+                        <tr>
+                            <th>الباحث / الطالب</th>
+                            <th>المعمل</th>
+                            <th>الجهاز</th>
+                            <th>التاريخ</th>
+                            <th>الوقت</th>
+                            <th>الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="fw-bold">@item.StudentName</td>
+                                    <td>@(item.Lab?.Name ?? "3047")</td>
+                                    <td>@(item.Device?.Name ?? "-")</td>
+                                    <td>@item.BookingDate</td>
+                                    <td>@item.StartTime - @item.EndTime</td>
+                                    <td><span class="badge" style="background-color: #004d26;">@item.Status</span></td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">لا توجد أي حجوزات مسجلة حتى الآن.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

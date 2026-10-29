@@ -1,0 +1,67 @@
+﻿@model IEnumerable<QassimLabBooking.Models.Reservation>
+
+@{
+    ViewData["Title"] = "لوحة تحكم المسؤول";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold" style="color: #004d26;">لوحة تحكم المسؤول - إدارة الحجوزات</h2>
+        <a asp-action="Logout" class="btn btn-danger">تسجيل الخروج</a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped align-middle">
+                    <thead style="background-color: #004d26; color: white;">
+                        <tr>
+                            <th>ID</th>
+                            <th>اسم الباحث</th>
+                            <th>المعمل</th>
+                            <th>الجهاز</th>
+                            <th>التاريخ</th>
+                            <th>الوقت</th>
+                            <th>الحالة</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Id</td>
+                                    <td class="fw-bold">@item.StudentName</td>
+                                    <td>@(item.Lab?.Name ?? "3047")</td>
+                                    <td>@(item.Device?.Name ?? "-")</td>
+                                    <td>@item.BookingDate</td>
+                                    <td>@item.StartTime - @item.EndTime</td>
+                                    <td><span class="badge" style="background-color: #004d26;">@item.Status</span></td>
+                                    <td>
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" onclick="return confirm('هل أنت متأكد من حذف هذا الحجز؟');">حذف</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="8" class="text-center text-muted py-4">لا توجد حجوزات مسجلة حالياً.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

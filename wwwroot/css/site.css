@@ -1,0 +1,64 @@
+:root {
+    --qassim-green: #004d26; /* الأخضر الرسمي لجامعة القصيم */
+    --qassim-green-hover: #003319;
+    --qassim-gold: #c5a059; /* لون ذهبي خفيف يتناسب مع الهوية */
+}
+
+html {
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+body {
+    margin-bottom: 60px;
+    background-color: #f8f9fa;
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem var(--qassim-green);
+}
+
+/* تخصيص الهيدر وشريط التنقل لهوية الجامعة */
+.navbar {
+    background-color: #ffffff !important;
+    border-bottom: 3px solid var(--qassim-green) !important;
+}
+
+.navbar-brand {
+    color: var(--qassim-green) !important;
+    font-weight: bold;
+}
+
+/* أزرار الموقع الرئيسية تتوافق مع لون الجامعة */
+.btn-primary {
+    background-color: var(--qassim-green) !important;
+    border-color: var(--qassim-green) !important;
+}
+
+    .btn-primary:hover {
+        background-color: var(--qassim-green-hover) !important;
+        border-color: var(--qassim-green-hover) !important;
+    }
+
+/* عناوين الصفحات والجداول */
+h2, h3, h4, h5, .text-primary {
+    color: var(--qassim-green) !important;
+}
+
+/* ترويسة الجداول بلون الجامعة الرسمي */
+.table-dark {
+    background-color: var(--qassim-green) !important;
+    border-color: var(--qassim-green) !important;
+}
+
+/* تصميم البطاقات بلون الهوية */
+.card {
+    border-top: 4px solid var(--qassim-green) !important;
+}

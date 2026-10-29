@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = "تسجيل دخول المسؤول";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow border-0 rounded-4">
+                <div class="card-header bg-primary text-white text-center py-3 rounded-top-4">
+                    <h4 class="mb-0">دخول لوحة تحكم المسؤول</h4>
+                </div>
+                <div class="card-body p-4">
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger text-center">@ViewBag.Error</div>
+                    }
+                    <form asp-action="Login" method="post">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">اسم المستخدم</label>
+                            <input type="text" name="username" class="form-control" required placeholder="أدخل اسم المستخدم" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">كلمة المرور</label>
+                            <input type="password" name="password" class="form-control" required placeholder="أدخل كلمة المرور" />
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">تسجيل الدخول</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

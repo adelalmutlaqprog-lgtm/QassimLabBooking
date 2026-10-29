@@ -1,0 +1,138 @@
+﻿@model IEnumerable<QassimLabBooking.Models.Lab>
+
+@{
+    ViewData["Title"] = "نظام حجز معامل الكيمياء";
+}
+
+<div class="container mt-5">
+    <!-- رأس الصفحة -->
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold" style="color: #004d26;">قسم الكيمياء</h1>
+        <p class="lead text-muted">نظام حجز المعامل والأجهزة البحثية والعلمية</p>
+    </div>
+
+    <!-- رسالة النجاح -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- رسالة الخطأ أو التعارض -->
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- نموذج الحجز في منتصف الشاشة ومتجاوب مع الجوال -->
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            <div class="card shadow border-0 rounded-4">
+                <div class="card-header text-white text-center py-3 rounded-top-4" style="background-color: #004d26 !important;">
+                    <h4 class="mb-0">نموذج حجز معمل و جهاز</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-controller="Home" asp-action="BookLab" method="post">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">اسم الباحث / الطالب</label>
+                            <input type="text" name="StudentName" class="form-control" required placeholder="أدخل اسمك الكامل" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">اختر المعمل</label>
+                            <select id="labSelect" name="LabId" class="form-select" required>
+                                <option value="">-- اختر المعمل المطلوب --</option>
+                                @if (Model != null)
+                                {
+                                    @foreach (var lab in Model)
+                                    {
+                                        <option value="@lab.Id">@lab.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">اختر الجهاز</label>
+                            <select id="deviceSelect" name="DeviceId" class="form-select" required>
+                                <option value="">-- اختر المعمل أولاً --</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">تاريخ الحجز</label>
+                            <input type="date" name="BookingDate" class="form-control" required />
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label class="form-label fw-bold">وقت البداية</label>
+                                <input type="time" name="StartTime" class="form-control" required />
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label class="form-label fw-bold">وقت النهاية</label>
+                                <input type="time" name="EndTime" class="form-control" required />
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold fs-5 mt-2" style="background-color: #004d26; border-color: #004d26;">تأكيد الحجز</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // تجميع بيانات المعامل والأجهزة بأمان تام لتعبئة قائمة الأجهزة ديناميكياً
+        const labsData = [
+            @if (Model != null)
+            {
+                    foreach (var lab in Model)
+                    {
+                            <text>
+                                    {
+                                        id: @lab.Id,
+                                        name: "@lab.Name",
+                                        devices: [
+                                            @if (lab.Devices != null)
+                                            {
+                                                    foreach (var dev in lab.Devices)
+                                                    {
+                                                            <text>{ id: @dev.Id, name: "@dev.Name" },</text>
+                                                    }
+                                            }
+                                        ]
+                                    },
+                            </text>
+                    }
+            }
+        ];
+
+        const labSelect = document.getElementById('labSelect');
+        const deviceSelect = document.getElementById('deviceSelect');
+
+        labSelect.addEventListener('change', function () {
+            const selectedLabId = parseInt(this.value);
+            deviceSelect.innerHTML = '<option value="">-- اختر الجهاز --</option>';
+
+            if (!selectedLabId) return;
+
+            const lab = labsData.find(l => l.id === selectedLabId);
+            if (lab && lab.devices) {
+                lab.devices.forEach(device => {
+                    const option = document.createElement('option');
+                    option.value = device.id;
+                    option.textContent = device.name;
+                    deviceSelect.appendChild(option);
+                });
+            }
+        });
+    </script>
+}
