@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("QassimLabBooking")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+68840fc2f2a61f91d8386e2121051e07e002f651")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+568b20b7b96d3a9db4a283d91554a4e19b131e22")]
 [assembly: System.Reflection.AssemblyProductAttribute("QassimLabBooking")]
 [assembly: System.Reflection.AssemblyTitleAttribute("QassimLabBooking")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
